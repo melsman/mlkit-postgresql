@@ -1,13 +1,26 @@
-# mlkit-postgresql
+## Postgresql library for Standard ML / MLKit
 
-Postgresql library for Standard ML / MLKit.
+This library provides access to the postgresql database from within
+SML using the `libpq` API. The functionality is provided through
+several layers:
 
-## Assumptions
+- _High-level API_. Structure __PgDb : [DB](src/db.sig)__.
+
+- _Medium-level API_. Structure __PgDb.Handle : [DB_HANDLE](src/db.sig)__.
+
+- _Low-level API_. Structure __Postgresql : [POSTGRESQL](src/postgresql.sig)__.
+
+With the medium-level and low-level APIs, the programmer manages and
+propagates connection information explicitly, whereas, with the
+high-level API, a single connection is setup and managed through
+side-effecting functions.
+
+### Assumptions
 
 A working MLKit installation (see
 https://github.com/melsman/mlkit). Use `brew install mlkit` on macOS.
 
-## Testing
+### Testing
 
 To test the library, first do as follows:
 
@@ -20,6 +33,11 @@ Then, proceed as follows:
     $ make init
     $ make
 
-## License
+Notice that it may be necessary to tweak the
+[src/Makefile](src/Makefile) and the [test/Makefile](test/Makefile) to
+specify the location of the MLKit compiler binary, the MLKit include
+files, and the MLKit basis library.
 
-See LICENSE file (MIT License)
+### License
+
+See [LICENSE](LICENSE) (MIT License).
