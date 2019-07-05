@@ -1,0 +1,9 @@
+local
+  $(SML_LIB)/basis/basis.mlb
+  $(SML_LIB)/basis/kitlib.mlb
+  $(SML_LIB)/basis/web/Quot.sml
+in
+  postgresql.mlb
+  db.sig
+  pgdb.sml
+end
