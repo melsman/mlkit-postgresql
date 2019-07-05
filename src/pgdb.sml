@@ -31,7 +31,7 @@ structure PgDbHandle :> DB_HANDLE where type conn = Postgresql.conn =
         end
 
     fun mkrow (res,i,j,a) : string option list =
-        if j < 0 then a
+        if j <= 0 then a
         else mkrow (res,i,j-1,
                     (if Pg.getisnull(res,i,j-1) then NONE
                      else SOME (Pg.getvalue(res,i,j-1)))::a)
@@ -98,6 +98,11 @@ structure PgDbHandle :> DB_HANDLE where type conn = Postgresql.conn =
           | [x] => SOME x
           | l => raise Pg.PgError ("zeroOrOneRow' expects zero or one row - got " ^ Int.toString (length l))
 
+    (* Transactions *)
+    fun begin (c:conn) : unit = Pg.exec(c,"BEGIN")
+    fun commit (c:conn) : unit = Pg.exec(c,"COMMIT")
+    fun rollback (c:conn) : unit = Pg.exec(c,"ROLLBACK")
+
     (* Sequences *)
     fun seqNextval c (seqName:string) : int =
 	let val s = oneField c `select ^(seqNextvalExp seqName)`
@@ -149,6 +154,11 @@ structure PgDb :> DB =
     val zeroOrOneField = wrap Handle.zeroOrOneField
     val zeroOrOneRow = wrap Handle.zeroOrOneRow
     fun zeroOrOneRow' x = wrap Handle.zeroOrOneRow' x
+
+    fun begin () = Handle.begin (getconn())
+    fun commit () = Handle.commit (getconn())
+    fun rollback () = Handle.rollback (getconn())
+
     val seqNextval = wrap Handle.seqNextval
     val seqCurrval = wrap Handle.seqCurrval
 

@@ -64,3 +64,9 @@ insert into currency (cur,title) values ('AED','UAE Dirham'), ('AFN','Afghani'),
  ('XCD','East Caribbean Dollar'), ('XDR','SDR (Special Drawing Right)'), ('XOF','CFA Franc BCEAO'),
  ('XPF','CFP Franc'), ('XSU','Sucre'), ('XUA','ADB Unit of Account'), ('YER','Yemeni Rial'), ('ZAR','Rand'),
  ('ZMW','Zambian Kwacha'), ('ZWL','Zimbabwe Dollar');
+
+create table cars (
+       brand text not null,
+       model text not null,
+       cyear integer not null
+);

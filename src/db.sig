@@ -20,6 +20,11 @@ signature DB_HANDLE = sig
   val zeroOrOneRow   : conn -> quot -> string list option
   val zeroOrOneRow'  : conn -> ((string->string)->'a) -> quot -> 'a option
 
+  (* Transactions *)
+  val begin          : conn -> unit
+  val commit         : conn -> unit
+  val rollback       : conn -> unit
+
   (* Sequences *)
   val seqNextval     : conn -> string -> int
   val seqCurrval     : conn -> string -> int
@@ -48,6 +53,11 @@ signature DB = sig
   val zeroOrOneField : quot -> string option
   val zeroOrOneRow   : quot -> string list option
   val zeroOrOneRow'  : ((string->string)->'a) -> quot -> 'a option
+
+  (* Transactions *)
+  val begin          : unit -> unit
+  val commit         : unit -> unit
+  val rollback       : unit -> unit
 
   (* Sequences *)
   val seqNextval    : string -> int
