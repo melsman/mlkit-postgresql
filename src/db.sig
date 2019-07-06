@@ -35,54 +35,55 @@ signature DB = sig
 
   exception DbError of string
 
-  structure Handle : DB_HANDLE
+  structure Handle    : DB_HANDLE
 
   (* Connectivity *)
-  val doconnect : string -> unit
-  val deconnect : unit -> unit
+  val doconnect       : string -> unit
+  val deconnect       : unit -> unit
 
   (* Data manipulation language *)
-  val dml            : quot -> unit
-  val errmsg         : unit -> string
+  val dml             : quot -> unit
+  val errmsg          : unit -> string
 
   (* Queries *)
-  val fold           : ((string->string)*'a->'a) -> 'a -> quot -> 'a
-  val foldRaw        : (string option list * 'a -> 'a) -> 'a -> quot -> 'a
-  val app            : ((string->string)->'a) -> quot -> unit
-  val list           : ((string->string)->'a) -> quot -> 'a list
-  val oneField       : quot -> string
-  val zeroOrOneField : quot -> string option
-  val zeroOrOneRow   : quot -> string list option
-  val zeroOrOneRow'  : ((string->string)->'a) -> quot -> 'a option
+  val fold            : ((string->string)*'a->'a) -> 'a -> quot -> 'a
+  val foldRaw         : (string option list * 'a -> 'a) -> 'a -> quot -> 'a
+  val app             : ((string->string)->'a) -> quot -> unit
+  val list            : ((string->string)->'a) -> quot -> 'a list
+  val oneField        : quot -> string
+  val zeroOrOneField  : quot -> string option
+  val zeroOrOneRow    : quot -> string list option
+  val zeroOrOneRow'   : ((string->string)->'a) -> quot -> 'a option
 
   (* Transactions *)
-  val begin          : unit -> unit
-  val commit         : unit -> unit
-  val rollback       : unit -> unit
-  val transaction    : (unit -> 'a) -> 'a
+  val begin           : unit -> unit
+  val commit          : unit -> unit
+  val rollback        : unit -> unit
+  val transaction     : (unit -> 'a) -> 'a
+  val transactionConn : (Handle.conn -> 'a) -> 'a
 
   (* Sequences *)
-  val seqNextval    : string -> int
-  val seqCurrval    : string -> int
+  val seqNextval      : string -> int
+  val seqCurrval      : string -> int
 
   (* Miscellaneous *)
-  val seqNextvalExp : string -> string
-  val seqCurrvalExp : string -> string
-  val sysdateExp    : string
-  val qq            : string -> string
-  val qqq           : string -> string
-  val toDate        : string -> Date.date option
-  val timestampType : string
-  val toTimestampExp: string -> string
-  val toTimestamp   : string -> Date.date option
-  val fromDate      : Date.date -> string
-  val toDateExp     : string -> string
-  val valueList     : string list -> string
-  val setList       : (string*string) list -> string
-  val toBool        : string -> bool option
-  val fromBool      : bool -> string
-  val toReal        : string -> real option
-  val fromReal      : real -> string
+  val seqNextvalExp   : string -> string
+  val seqCurrvalExp   : string -> string
+  val sysdateExp      : string
+  val qq              : string -> string
+  val qqq             : string -> string
+  val toDate          : string -> Date.date option
+  val timestampType   : string
+  val toTimestampExp  : string -> string
+  val toTimestamp     : string -> Date.date option
+  val fromDate        : Date.date -> string
+  val toDateExp       : string -> string
+  val valueList       : string list -> string
+  val setList         : (string*string) list -> string
+  val toBool          : string -> bool option
+  val fromBool        : bool -> string
+  val toReal          : string -> real option
+  val fromReal        : real -> string
 end
 
 (*

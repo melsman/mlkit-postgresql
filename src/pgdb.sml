@@ -164,6 +164,8 @@ structure PgDb :> DB =
     fun transaction (f : unit -> 'a) : 'a =
         (begin(); f() before commit())
         handle ? => (rollback(); raise ?)
+    fun transactionConn (f : Handle.conn -> 'a) : 'a =
+        Handle.transaction (getconn()) f
 
     val seqNextval = wrap Handle.seqNextval
     val seqCurrval = wrap Handle.seqCurrval
