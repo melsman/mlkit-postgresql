@@ -24,6 +24,7 @@ signature DB_HANDLE = sig
   val begin          : conn -> unit
   val commit         : conn -> unit
   val rollback       : conn -> unit
+  val transaction    : conn -> (conn -> 'a) -> 'a
 
   (* Sequences *)
   val seqNextval     : conn -> string -> int
@@ -58,6 +59,7 @@ signature DB = sig
   val begin          : unit -> unit
   val commit         : unit -> unit
   val rollback       : unit -> unit
+  val transaction    : (unit -> 'a) -> 'a
 
   (* Sequences *)
   val seqNextval    : string -> int

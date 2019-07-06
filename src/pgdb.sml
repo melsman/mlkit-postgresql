@@ -102,6 +102,9 @@ structure PgDbHandle :> DB_HANDLE where type conn = Postgresql.conn =
     fun begin (c:conn) : unit = Pg.exec(c,"BEGIN")
     fun commit (c:conn) : unit = Pg.exec(c,"COMMIT")
     fun rollback (c:conn) : unit = Pg.exec(c,"ROLLBACK")
+    fun transaction (c:conn) (f : conn -> 'a) : 'a =
+        (begin c; f c before commit c)
+        handle ? => (rollback c; raise ?)
 
     (* Sequences *)
     fun seqNextval c (seqName:string) : int =
@@ -158,6 +161,9 @@ structure PgDb :> DB =
     fun begin () = Handle.begin (getconn())
     fun commit () = Handle.commit (getconn())
     fun rollback () = Handle.rollback (getconn())
+    fun transaction (f : unit -> 'a) : 'a =
+        (begin(); f() before commit())
+        handle ? => (rollback(); raise ?)
 
     val seqNextval = wrap Handle.seqNextval
     val seqCurrval = wrap Handle.seqCurrval
