@@ -1,0 +1,20 @@
+language: generic
+
+services:
+  - postgresql
+
+addons:
+  apt:
+    update: true
+    sources:
+      - sourceline: 'ppa:pmunksgaard/mlkit'
+    packages:
+      - mlkit
+
+script:
+  - cd src
+  - make
+  - cd ../test
+  - PGUSER=postgres make init
+  - PGUSER=postgres make
+  - make ctest
