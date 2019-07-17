@@ -1,0 +1,16 @@
+language: minimal
+
+addons:
+  apt:
+    update: true
+    sources:
+      - sourceline: 'ppa:pmunksgaard/mlkit'
+    packages:
+      - mlkit
+      - postgresql
+
+script:
+  - make
+  - cd test
+  - make init
+  - make

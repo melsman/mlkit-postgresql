@@ -1,18 +1,18 @@
 
-KIT=`pwd`/../../mlkit
+KIT="/usr/lib/mlkit"
 
 OPT:=-Wall -std=gnu99 -g -O2
 CFLAGS=-DTAG_VALUES -DTAG_FREE_PAIRS -DENABLE_GC $(OPT)
 
 KITHFILES=$(KIT)/src/Runtime
 
-MLKIT=SML_LIB=$(KIT) $(KIT)/bin/mlkit -quot
+MLKIT=SML_LIB=$(KIT) mlkit -quot
 
 all: test.exe
 	./test.exe
 
 test.exe: test.mlb test.sml
-	$(MLKIT) -o $@ -libdirs "../src" -libs "smlpq,pq" $<
+	$(MLKIT) -o $@ -libdirs "../src" -libs "smlpq,pq,m" $<
 
 # simple c-test of libpq
 ctest: testlibpq.c
