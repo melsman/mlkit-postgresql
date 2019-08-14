@@ -27,6 +27,14 @@ To test the library, first do as follows:
     $ cd src
     $ make
 
+Notice that, dependent on the architecture, you may need first to set the
+environment variable `MLKIT_INCLUDEDIR` to something different than
+the default value `/usr/share/mlkit/include/`. For instance, if you
+use `brew` under macOS, you should do as follows:
+
+    $ cd src
+    $ MLKIT_INCLUDEDIR=/usr/local/share/mlkit/include/ make
+
 Then, proceed as follows:
 
     $ cd ../test
