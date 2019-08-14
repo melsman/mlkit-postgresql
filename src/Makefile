@@ -1,12 +1,13 @@
 OPT:=-Wall -std=gnu99 -g -O2
 CFLAGS=-DTAG_VALUES -DTAG_FREE_PAIRS -DENABLE_GC $(OPT)
 
-MLKIT_INCLUDEDIR?=`pwd`/../../mlkit/src/Runtime
+MLKIT_INCLUDEDIR?="/usr/share/mlkit/include/"
+POSTGRESQL_INCLUDEDIR?="/usr/include/postgresql"
 
 all: libsmlpq.a
 
 libsmlpq.a: libsmlpq.c Makefile
-	gcc $(CFLAGS) -c -I $(MLKIT_INCLUDEDIR) -o $@ $<
+	gcc $(CFLAGS) -c -I $(MLKIT_INCLUDEDIR) -I $(POSTGRESQL_INCLUDEDIR) -o $@ $<
 
 .PHONY: clean
 clean:
