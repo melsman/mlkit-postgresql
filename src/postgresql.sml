@@ -24,12 +24,12 @@ fun exec (conn:conn, cmd:string) : unit =
     let fun exec0 (conn:conn, cmd:string) : int =
             prim("smlpq_exec", (conn,cmd))
     in if exec0 (conn,cmd) <> ~1 then ()
-       else raise PgError "exec"
+       else raise PgError ("Exec: " ^ cmd)
     end
 
 fun query (conn:conn, query:string) : res =
     let val r : res = prim("smlpq_query", (conn,query))
-    in if isNullFptr r then raise PgError "query"
+    in if isNullFptr r then raise PgError ("Query: " ^ query)
        else r
     end
 
