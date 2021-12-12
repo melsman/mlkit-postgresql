@@ -17,26 +17,11 @@ jobs:
 
     strategy:
       matrix:
-#        os: [ubuntu-latest, macos-latest]
-        os: [macos-latest]
+        os: [ubuntu-latest, macos-latest]
+#        os: [macos-latest]
         mlcomp: [mlkit]
 
     runs-on: ${{ matrix.os }}
-
-    # services:
-    #   postgres:
-    #     image: postgres:14.1
-    #     env:
-    #       POSTGRES_USER: root
-    #       POSTGRES_PASSWORD: secret
-    #       POSTGRES_DB: simple_bank
-    #     ports:
-    #       - 5432:5432
-    #     options: >-
-    #       --health-cmd pg_isready
-    #       --health-interval 10s
-    #       --health-timeout 5s
-    #       --health-retries 5
 
     steps:
       - uses: actions/checkout@v2
@@ -85,17 +70,33 @@ jobs:
             echo "PostgreSQL service not ready, wait 10 more sec, attempts left: $i"
             sleep 10
           done
-
-      - name: Create database user and database
-        run: |
           psql --command="CREATE USER myuser PASSWORD 'mypassword'" --command="\du" postgres
           createdb --owner=myuser mydatabase
           PGPASSWORD=mypassword psql --username=myuser --host=localhost --list mydatabase
+
+      - name: Start postgresql (linux)
+        if: ${{ env.OS == 'linux' }}
+        run: |
+          sudo systemctl start postgresql.service
+	  pg_isready
+          sudo -u postgres psql --command="CREATE USER myuser PASSWORD 'mypassword'" --command="\du"
+          sudo -u postgres createdb --owner=myuser mydatabase
+          PGPASSWORD=mypassword psql --username=myuser --host=localhost --list mydatabase
+
+      - name: Build (linux)
+        if: ${{ env.OS == 'linux' }}
+        run: |
+          POSTGRESQL_INCLUDEDIR=/usr/include/postgresql MLKIT_INCLUDEDIR=$HOME/mlkit-bin-dist-${{env.OS}}/share/mlkit/include MLCOMP=${{ matrix.mlcomp }} make clean all
 
       - name: Build (macos)
         if: ${{ env.OS == 'darwin' }}
         run: |
           POSTGRESQL_INCLUDEDIR=/usr/local/include/postgresql MLKIT_INCLUDEDIR=$HOME/mlkit-bin-dist-${{env.OS}}/share/mlkit/include MLCOMP=${{ matrix.mlcomp }} make clean all
+
+      - name: Run tests (linux)
+        if: ${{ env.OS == 'linux' }}
+        run: |
+          POSTGRESQL_INCLUDEDIR=/usr/include/postgresql MLKIT_INCLUDEDIR=$HOME/mlkit-bin-dist-${{env.OS}}/share/mlkit/include MLCOMP=${{ matrix.mlcomp }} make test
 
       - name: Run tests (macos)
         if: ${{ env.OS == 'darwin' }}
