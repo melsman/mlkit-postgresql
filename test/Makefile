@@ -24,5 +24,5 @@ init:
 
 .PHONY: clean
 clean:
-	rm -rf a.out *~ *.o *.a *.exe MLB
+	rm -rf a.out *~ *.o *.a *.exe MLB a.out.dSYM
 	dropdb --if-exists dbtest

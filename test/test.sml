@@ -248,4 +248,10 @@ val () = Db.rollback()
 
 val () = Db.deconnect()
 
+(* toDate and toTimestamp *)
+
+val () = test "toDate-1" (Date.fmt "%Y--%m--%d" o Option.valOf o Db.toDate) "2021-10-23" "2021--10--23"
+
+val () = test "toTimestamp-1" (Date.fmt "%Y--%m--%d %H.%M.%S" o Option.valOf o Db.toTimestamp) "2021-10-23 22:12:45" "2021--10--23 22.12.45"
+
 val () = print "[Testing PgDb DONE]\n"

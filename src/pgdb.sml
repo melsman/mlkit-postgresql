@@ -202,27 +202,56 @@ structure PgDb :> DB =
 	| 11 => Date.Nov
 	| 12 => Date.Dec
 	| _ => raise DbError ("toDate: " ^ Int.toString mth)
-    in
-      fun toDate s =
-	(case (RegExp.extract o RegExp.fromString) "([0-9][0-9][0-9][0-9])-([0-9][0-9])-([0-9][0-9]).*" s of
-	     SOME [yyyy,mm,dd] => SOME (Date.date{year=Option.valOf (Int.fromString yyyy),
-						  month=mthToName (Option.valOf (Int.fromString mm)),
-						  day=Option.valOf (Int.fromString dd),
-						  hour=0,minute=0,second=0,offset=NONE})
-	   | _ => NONE)
-	handle _ => NONE
 
-      fun toTimestamp t =
-	  (case (RegExp.extract o RegExp.fromString) "([0-9][0-9][0-9][0-9])-([0-9][0-9])-([0-9][0-9]) ([0-9][0-9]):([0-9][0-9]):([0-9][0-9]).*" t of
-	       SOME [yyyy,mm,dd,h,m,s] => SOME (Date.date{year=Option.valOf (Int.fromString yyyy),
-						          month=mthToName (Option.valOf (Int.fromString mm)),
-						          day=Option.valOf (Int.fromString dd),
-						          hour=Option.valOf(Int.fromString h),
-						          minute=Option.valOf(Int.fromString m),
-						          second=Option.valOf(Int.fromString s),
-						          offset=NONE})
-	     | _ => NONE)
-	  handle _ => NONE
+      fun scan_d get s =
+          case get s of
+              SOME(c,s) => if Char.isDigit c then SOME(c,s)
+                           else NONE
+            | NONE => NONE
+
+      fun scan_char c get s =
+          case get s of
+              SOME(x,s) => if x=c then SOME((),s) else NONE
+            | NONE => NONE
+
+      infix >>> >>@ ->> >>-
+      fun (p1 >>> p2) get s =
+          case p1 get s of SOME(a,s) => (case p2 get s of
+                                             SOME(b,s) => SOME((a,b),s)
+                                           | NONE => NONE)
+                         | NONE => NONE
+
+      fun (p >>@ f) get s =
+          case p get s of SOME(a,s) => SOME(f a,s)
+                        | NONE => NONE
+      fun p1 ->> p2 = p1 >>> p2 >>@ (#2)
+      fun p1 >>- p2 = p1 >>> p2 >>@ (#1)
+
+      val scan_dd = scan_d >>> scan_d >>@ (fn (a,b) => implode[a,b])
+      val scan_dddd = scan_dd >>> scan_dd >>@ (op ^)
+      val p_dddd = scan_dddd >>@ (Option.valOf o Int.fromString)
+      val p_dd = scan_dd >>@ (Option.valOf o Int.fromString)
+      val p_date = p_dddd >>- scan_char #"-" >>> p_dd >>- scan_char #"-" >>> p_dd
+                          >>@ (fn ((y,m),d) => (y,m,d))
+      val p_time = p_dd >>- scan_char #":" >>> p_dd >>- scan_char #":" >>> p_dd
+                        >>@ (fn ((h,m),s) => (h,m,s))
+      val p_timestamp = p_date >>- scan_char #" " >>> p_time
+    in
+
+    fun toDate s =
+        (case p_date CharVectorSlice.getItem (CharVectorSlice.full s) of
+             SOME((y,m,d),_) => SOME (Date.date{year=y, month=mthToName m, day=d,
+			                        hour=0, minute=0, second=0, offset=NONE})
+           | NONE => NONE
+        ) handle _ => NONE
+
+    fun toTimestamp t =
+        (case p_timestamp CharVectorSlice.getItem (CharVectorSlice.full t) of
+             SOME(((y,m,d),(H,M,S)),_) => SOME (Date.date{year=y, month=mthToName m,
+                                                          day=d, hour=H, minute=M,
+                                                          second=S, offset=NONE})
+           | NONE => NONE
+        ) handle _ => NONE
     end
 
     fun toBool "t" = SOME true
@@ -237,9 +266,8 @@ structure PgDb :> DB =
 
     fun valueList vs = String.concatWith "," (List.map qqq vs)
 
-    fun setList vs = String.concatWith (Quot.toString `,
-`) (    List.map (fn (n,v) => n ^ "=" ^ qqq v) vs)
-
+    fun setList vs =
+        String.concatWith ",\n" (List.map (fn (n,v) => n ^ "=" ^ qqq v) vs)
   end
 
 end
