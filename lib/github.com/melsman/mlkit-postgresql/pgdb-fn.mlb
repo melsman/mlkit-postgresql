@@ -2,6 +2,7 @@ local
   $(SML_LIB)/basis/basis.mlb
 in
   postgresql.mlb
+  db-handle.sig
   db.sig
   pgdb-fn.sml
 end

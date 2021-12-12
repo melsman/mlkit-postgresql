@@ -1,4 +1,4 @@
-# # sml-parse [![CI](https://github.com/diku-dk/sml-parse/workflows/CI/badge.svg)](https://github.com/diku-dk/sml-parse/actions)
+# # mlkit-postgresql [![CI](https://github.com/melsman/mlkit-postgresql/workflows/CI/badge.svg)](https://github.com/melsman/mlkit-postgresql/actions)
 
 Postgresql library for Standard ML / MLKit
 
@@ -6,11 +6,11 @@ This library provides access to the postgresql database from within
 SML using the `libpq` API. The functionality is provided through
 several layers:
 
-- _High-level API_. Structure __PgDb : [DB](src/db.sig)__.
+- _High-level API_. Structure __PgDb : [DB](lib/github.com/melsman/mlkit-postgresql/db.sig)__.
 
-- _Medium-level API_. Structure __PgDb.Handle : [DB_HANDLE](src/db.sig)__.
+- _Medium-level API_. Structure __PgDb.Handle : [DB_HANDLE](lib/github.com/melsman/mlkit-postgresql/db-handle.sig)__.
 
-- _Low-level API_. Structure __Postgresql : [POSTGRESQL](src/postgresql.sig)__.
+- _Low-level API_. Structure __Postgresql : [POSTGRESQL](lib/github.com/melsman/mlkit-postgresql/postgresql.sig)__.
 
 With the medium-level and low-level APIs, the programmer manages and
 propagates connection information explicitly, whereas, with the
@@ -27,11 +27,11 @@ passed to `mlkit`.
 
 - `lib/github.com/melsman/mlkit-postgresql/pgdb.mlb`:
 
-  - **structure** `PgDb` :> `DB where type sql = string`
+  - **structure** `PgDb` :> [`DB`](lib/github.com/melsman/mlkit-postgresql/db.sig)` where type sql = string`
 
 - `lib/github.com/melsman/mlkit-postgresql/pgdb-quot.mlb`:
 
-  - **structure** `PgDb` :> `DB where type sql = quot`
+  - **structure** `PgDb` :> [`DB`](lib/github.com/melsman/mlkit-postgresql/db.sig)` where type sql = quot`
 
 - `lib/github.com/melsman/mlkit-postgresql/pgdb-fn.mlb`:
 
@@ -43,7 +43,6 @@ passed to `mlkit`.
 
   - **signature** [`POSTGRESQL`](lib/github.com/melsman/mlkit-postgresql/postgresql.sig)
   - **structure** `Postgresql` :> `POSTGRESQL`
-
 
 ## Assumptions
 
