@@ -94,7 +94,7 @@ jobs:
       - name: Build (macos)
         if: ${{ env.OS == 'darwin' }}
         run: |
-          POSTGRESQL_INCLUDEDIR=/usr/local/include/postgresql MLKIT_INCLUDEDIR=$HOME/mlkit-bin-dist-${{env.OS}}/include MLCOMP=${{ matrix.mlcomp }} make clean all
+          POSTGRESQL_INCLUDEDIR=/usr/local/include/postgresql MLKIT_INCLUDEDIR=$HOME/mlkit-bin-dist-${{env.OS}}/share/include MLCOMP=${{ matrix.mlcomp }} make clean all
 
       - name: Run tests (macos)
         if: ${{ env.OS == 'darwin' }}
