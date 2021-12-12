@@ -15,6 +15,12 @@ propagates connection information explicitly, whereas, with the
 high-level API, a single connection is setup and managed through
 side-effecting functions.
 
+There are two versions of the __PgDb__ and __PgDb.Handle__ structures,
+one that treats SQL code as Standard ML strings (available through
+`pgdb.mlb`) and one that treats SQL code as MLKit quotations
+(available through `pgdb-quot.mlb`), which requires `-quot` to be
+passed to `mlkit`.
+
 ### Assumptions
 
 A working MLKit installation (see

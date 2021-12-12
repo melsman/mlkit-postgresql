@@ -1,11 +1,15 @@
-POSTGRESQL_INCLUDEDIR?="/usr/include/postgresql"
+POSTGRESQL_INCLUDEDIR ?= /usr/include/postgresql
 
 OPT:=-Wall -std=gnu99 -g -O2
 CFLAGS=-DTAG_VALUES -DTAG_FREE_PAIRS -DENABLE_GC $(OPT) -I $(POSTGRESQL_INCLUDEDIR)
 
-MLKIT?="mlkit"
+MLKIT ?= mlkit
 
-all: test.exe
+.PHONY: all
+all: test
+
+.PHONY: test
+test: test.exe
 	./test.exe
 
 test.exe: test.mlb test.sml

@@ -1,6 +1,6 @@
 structure Postgresql :> POSTGRESQL = struct
 
-type conn = foreignptr
+type db = foreignptr
 type res = foreignptr
 
 exception PgError of string
@@ -8,26 +8,26 @@ exception PgError of string
 fun isNullFptr (f:foreignptr) : bool =
     prim("smlpq_fptr_isnull", f)
 
-fun connect (conninfo:string) : conn =
-    let val c : conn = prim("smlpq_connect", conninfo)
+fun connect (conninfo:string) : db =
+    let val c : db = prim("smlpq_connect", conninfo)
     in if isNullFptr c then raise PgError "connect"
        else c
     end
 
-fun finish (conn:conn) : unit =
+fun finish (conn:db) : unit =
     prim("smlpq_finish", conn)
 
-fun errmsg (conn:conn) : string =
+fun errmsg (conn:db) : string =
     prim("smlpq_errorMessage", conn)
 
-fun exec (conn:conn, cmd:string) : unit =
-    let fun exec0 (conn:conn, cmd:string) : int =
+fun exec (conn:db, cmd:string) : unit =
+    let fun exec0 (conn:db, cmd:string) : int =
             prim("smlpq_exec", (conn,cmd))
     in if exec0 (conn,cmd) <> ~1 then ()
        else raise PgError ("Exec: " ^ cmd)
     end
 
-fun query (conn:conn, query:string) : res =
+fun query (conn:db, query:string) : res =
     let val r : res = prim("smlpq_query", (conn,query))
     in if isNullFptr r then raise PgError ("Query: " ^ query)
        else r

@@ -1,8 +1,7 @@
 local
   $(SML_LIB)/basis/basis.mlb
 in
-  Quot.sml
   postgresql.mlb
   db.sig
-  pgdb.sml
+  pgdb-fn.sml
 end

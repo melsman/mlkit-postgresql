@@ -1,0 +1,7 @@
+local
+  $(SML_LIB)/basis/basis.mlb
+  pgdb-fn.mlb
+in
+  Quot.sml
+  pgdb-quot.sml
+end
