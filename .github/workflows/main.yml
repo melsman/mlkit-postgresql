@@ -47,8 +47,9 @@ jobs:
       - name: Check
         run: |
           mlkit --version
-          ls -F $HOME/mlkit-bin-dist-${{env.OS}}
-          ls -FR $HOME/mlkit-bin-dist-${{env.OS}}/share
+#          ls -F $HOME/mlkit-bin-dist-${{env.OS}}
+#          ls -FR $HOME/mlkit-bin-dist-${{env.OS}}/share
+          echo $USER
           smlpkg --version
           psql --version
 
@@ -79,9 +80,9 @@ jobs:
         run: |
           sudo systemctl start postgresql.service
           pg_isready
-          sudo -u postgres psql --command="CREATE USER myuser PASSWORD 'mypassword'" --command="\du"
-          sudo -u postgres createdb --owner=myuser mydatabase
-          PGPASSWORD=mypassword psql --username=myuser --host=localhost --list mydatabase
+          sudo -u postgres psql --command="CREATE USER runner PASSWORD 'mypassword'" --command="\du"
+          sudo -u postgres createdb --owner=runner mydatabase
+          PGPASSWORD=mypassword psql --username=runner --host=localhost --list mydatabase
 
       - name: Build (linux)
         if: ${{ env.OS == 'linux' }}
