@@ -90,8 +90,12 @@ jobs:
           createdb --owner=myuser mydatabase
           PGPASSWORD=mypassword psql --username=myuser --host=localhost --list mydatabase
 
-      - name: Build
-        run: MLCOMP=${{ matrix.mlcomp }} make clean all
+      - name: Build (macos)
+        if: ${{ env.OS == 'darwin' }}
+        run: |
+	  POSTGRESQL_INCLUDEDIR=/usr/local/include/postgresql MLKIT_INCLUDEDIR=$HOME/mlkit-bin-dist-${{env.OS}}/include MLCOMP=${{ matrix.mlcomp }} make clean all
 
-      - name: Run tests
-        run: MLCOMP=${{ matrix.mlcomp }} make test
+      - name: Run tests (macos)
+        if: ${{ env.OS == 'darwin' }}
+        run: |
+	  POSTGRESQL_INCLUDEDIR=/usr/local/include/postgresql MLKIT_INCLUDEDIR=$HOME/mlkit-bin-dist-${{env.OS}}/include MLCOMP=${{ matrix.mlcomp }} make test
