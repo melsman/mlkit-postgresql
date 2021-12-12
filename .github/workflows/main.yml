@@ -62,6 +62,7 @@ jobs:
       - name: Check
         run: |
           mlkit --version
+	  ls -F $HOME/mlkit-bin-dist-${{env.OS}}
           smlpkg --version
           psql --version
 
