@@ -50,6 +50,26 @@ jobs:
           smlpkg --version
           psql --version
 
+      - name: Start postgresql (linux)
+        if: ${{ env.OS == 'linux' }}
+        run: |
+          sudo systemctl start postgresql.service
+          pg_isready
+          sudo -u postgres psql --command="CREATE USER $USER PASSWORD 'mypassword'"
+          sudo -u postgres psql --command="ALTER USER $USER CREATEDB"
+          sudo -u postgres createdb --owner=$USER mydatabase
+          PGPASSWORD=mypassword psql --username=$USER --host=localhost --list mydatabase
+
+      - name: Build (linux)
+        if: ${{ env.OS == 'linux' }}
+        run: |
+          POSTGRESQL_INCLUDEDIR=/usr/include/postgresql MLKIT_INCLUDEDIR=$HOME/mlkit-bin-dist-${{env.OS}}/share/mlkit/include MLCOMP=${{ matrix.mlcomp }} make clean all
+
+      - name: Run tests (linux)
+        if: ${{ env.OS == 'linux' }}
+        run: |
+          POSTGRESQL_INCLUDEDIR=/usr/include/postgresql MLKIT_INCLUDEDIR=$HOME/mlkit-bin-dist-${{env.OS}}/share/mlkit/include MLCOMP=${{ matrix.mlcomp }} make test
+
       - name: Start postgresql (macos)
         if: ${{ env.OS == 'darwin' }}
         run: |
@@ -72,31 +92,10 @@ jobs:
           createdb --owner=myuser mydatabase
           PGPASSWORD=mypassword psql --username=myuser --host=localhost --list mydatabase
 
-      - name: Start postgresql (linux)
-        if: ${{ env.OS == 'linux' }}
-        run: |
-          sudo systemctl start postgresql.service
-          pg_isready
-          sudo -u postgres psql --command="CREATE USER runner PASSWORD 'mypassword'" --command="\du"
-          sudo -u postgres psql --command="ALTER USER runner CREATEDB" --command="\du"
-          sudo -u postgres createdb --owner=runner mydatabase
-          PGPASSWORD=mypassword psql --username=runner --host=localhost --list mydatabase
-          echo "$USER"
-
-      - name: Build (linux)
-        if: ${{ env.OS == 'linux' }}
-        run: |
-          POSTGRESQL_INCLUDEDIR=/usr/include/postgresql MLKIT_INCLUDEDIR=$HOME/mlkit-bin-dist-${{env.OS}}/share/mlkit/include MLCOMP=${{ matrix.mlcomp }} make clean all
-
       - name: Build (macos)
         if: ${{ env.OS == 'darwin' }}
         run: |
           POSTGRESQL_INCLUDEDIR=/usr/local/include/postgresql MLKIT_INCLUDEDIR=$HOME/mlkit-bin-dist-${{env.OS}}/share/mlkit/include MLCOMP=${{ matrix.mlcomp }} make clean all
-
-      - name: Run tests (linux)
-        if: ${{ env.OS == 'linux' }}
-        run: |
-          POSTGRESQL_INCLUDEDIR=/usr/include/postgresql MLKIT_INCLUDEDIR=$HOME/mlkit-bin-dist-${{env.OS}}/share/mlkit/include MLCOMP=${{ matrix.mlcomp }} make test
 
       - name: Run tests (macos)
         if: ${{ env.OS == 'darwin' }}
