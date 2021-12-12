@@ -1,4 +1,4 @@
 local $(SML_LIB)/basis/basis.mlb
-      ../src/pgdb-quot.mlb
+      ../pgdb-quot.mlb
 in test.sml
 end

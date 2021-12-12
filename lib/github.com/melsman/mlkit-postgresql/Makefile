@@ -26,6 +26,11 @@ pgdb-quot.exe: pgdb-quot.mlb $(SRCFILES) libsmlpq.a
 pgdb.exe: pgdb.mlb $(SRCFILES) libsmlpq.a
 	$(MLKIT) -o $@ -libdirs "." -libs "smlpq,pq,m" $<
 
+.PHONY: test
+test:
+	$(MAKE) -C test test
+
 .PHONY: clean
 clean:
 	rm -rf a.out *~ *.o *.a *.exe MLB
+	$(MAKE) -C test clean

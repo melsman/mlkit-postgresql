@@ -1,0 +1,4 @@
+package github.com/melsman/mlkit-postgresql
+
+require {
+}
