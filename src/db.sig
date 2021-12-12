@@ -40,6 +40,7 @@ signature DB = sig
   (* Connectivity *)
   val doconnect       : string -> unit
   val deconnect       : unit -> unit
+  val setconn         : Handle.conn -> unit
 
   (* Data manipulation language *)
   val dml             : quot -> unit

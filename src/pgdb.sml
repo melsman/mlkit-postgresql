@@ -143,6 +143,7 @@ structure PgDb :> DB =
            case !conn of
                SOME c => c
              | NONE => raise DbError "no open db connection"
+       fun setconn c = conn := SOME c
     end
 
     fun wrap f x = f (getconn()) x
