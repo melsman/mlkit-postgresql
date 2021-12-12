@@ -24,6 +24,7 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     services:
+      if: ${{ env.OS == 'linux' }}
       postgres:
         image: postgres:14.1
         env:
