@@ -17,7 +17,8 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+#        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest]
         mlcomp: [mlkit]
 
     runs-on: ${{ matrix.os }}
