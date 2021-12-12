@@ -18,7 +18,7 @@ jobs:
     strategy:
       matrix:
 #        os: [ubuntu-latest, macos-latest]
-        os: [ubuntu-latest]
+        os: [macos-latest]
         mlcomp: [mlkit]
 
     runs-on: ${{ matrix.os }}
@@ -64,6 +64,31 @@ jobs:
           mlkit --version
           smlpkg --version
           psql --version
+
+      - name: Start postgresql (macos)
+        if: ${{ env.OS == 'darwin' }}
+        run: |
+          brew services start postgresql
+          echo "Check PostgreSQL service is running"
+          i=10
+          COMMAND='pg_isready'
+          while [ $i -gt 0 ]; do
+            echo "Check PostgreSQL service status"
+            eval $COMMAND && break
+            ((i--))
+            if [ $i == 0 ]; then
+              echo "PostgreSQL service not ready, all attempts exhausted"
+              exit 1
+            fi
+            echo "PostgreSQL service not ready, wait 10 more sec, attempts left: $i"
+            sleep 10
+          done
+
+      - name: Create database user and database
+        run: |
+          psql --command="CREATE USER myuser PASSWORD 'mypassword'" --command="\du" postgres
+          createdb --owner=myuser mydatabase
+          PGPASSWORD=mypassword psql --username=myuser --host=localhost --list mydatabase
 
       - name: Build
         run: MLCOMP=${{ matrix.mlcomp }} make clean all
