@@ -37,7 +37,8 @@ jobs:
         uses: diku-dk/install-mlkit@HEAD
 
       - name: Build
-        run MLKIT_INCLUDEDIR=$RUNHOME/.local/share/mlkit/include make clean all
+        run: |
+          MLKIT_INCLUDEDIR=$RUNHOME/.local/share/mlkit/include make clean all
 
       - name: Start postgresql (linux)
         if: ${{ env.OS == 'linux' }}
