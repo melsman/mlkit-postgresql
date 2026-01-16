@@ -39,8 +39,9 @@ jobs:
       - name: Install Postgresql (macos)
         if: ${{ env.OS == 'darwin' }}
         run: |
-          brew install postgresql@14
-          brew link postgresql@14
+          arch -x86_64 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+          arch -x86_64 /usr/local/bin/brew install postgresql@14
+          arch -x86_64 /usr/local/bin/brew link postgresql@14
 
       - name: Build
         run: |
