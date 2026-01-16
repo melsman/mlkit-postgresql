@@ -38,7 +38,7 @@ jobs:
 
       - name: Build
         run: |
-          MLKIT_INCLUDEDIR=$RUNHOME/.local/share/mlkit/include make clean all
+          MLKIT_INCLUDEDIR=$RUNHOME/.local/share/mlkit/include make all
 
       - name: Start postgresql (linux)
         if: ${{ env.OS == 'linux' }}
