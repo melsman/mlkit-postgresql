@@ -61,7 +61,7 @@ jobs:
       - name: Start postgresql (macos)
         if: ${{ env.OS == 'darwin' }}
         run: |
-          brew services start postgresql
+          arch -x86_64 /usr/local/bin/brew services start postgresql
           echo "Check PostgreSQL service is running"
           i=10
           COMMAND='pg_isready'
