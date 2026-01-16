@@ -3,14 +3,13 @@ CFLAGS = -DTAG_VALUES -DTAG_FREE_PAIRS -DENABLE_GC $(OPT)
 
 ifeq ($(shell uname),Darwin)
 MLKIT_INCLUDEDIR ?= /usr/local/share/mlkit/include/
-POSTGRESQL_INCLUDEDIR ?= /usr/local/include/postgresql@14
-POSTGRESQL_LIBDIR ?= /usr/local/lib/postgresql@14
 CFLAGS += -arch x86_64
 else
 MLKIT_INCLUDEDIR ?= /usr/share/mlkit/include/
-POSTGRESQL_INCLUDEDIR ?= /usr/include/postgresql
-POSTGRESQL_LIBDIR ?= /usr/lib/postgresql
 endif
+
+POSTGRESQL_INCLUDEDIR ?= $(shell pg_config --includedir)
+POSTGRESQL_LIBDIR ?= $(shell pg_config --libdir)
 
 MLKIT ?= mlkit
 
