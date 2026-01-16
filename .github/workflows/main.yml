@@ -39,7 +39,7 @@ jobs:
       - name: Install Postgresql (macos)
         if: ${{ env.OS == 'darwin' }}
         run: |
-          brew install postgresql@14
+          brew install postgresql@14 libpq-dev
 
       - name: Build
         run: |
