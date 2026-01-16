@@ -36,6 +36,11 @@ jobs:
       - name: Install MLKit
         uses: diku-dk/install-mlkit@HEAD
 
+      - name: Install Postgresql (macos)
+        if: ${{ env.OS == 'darwin' }}
+        run: |
+          brew install postgresql@14
+
       - name: Build
         run: |
           MLKIT_INCLUDEDIR=$RUNHOME/.local/share/mlkit/include make all
