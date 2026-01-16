@@ -42,6 +42,7 @@ jobs:
           arch -x86_64 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
           arch -x86_64 /usr/local/bin/brew install postgresql@14
           arch -x86_64 /usr/local/bin/brew link postgresql@14
+          echo "/usr/local/opt/postgresql@14/bin/" >> $GITHUB_PATH
 
       - name: Build
         run: |
