@@ -28,7 +28,7 @@ uintptr_t
 smlpq_connect(String conninfo)
 {
   PGconn *conn;
-  conn = PQconnectdb(&(conninfo->data));
+  conn = PQconnectdb((char*)(&(conninfo->data)));
 
   if (PQstatus(conn) != CONNECTION_OK)
     {
@@ -51,7 +51,7 @@ long
 smlpq_exec(uintptr_t conn0, String command)
 {
   PGconn *conn = (PGconn *)untag_scalar(conn0);
-  PGresult *res = PQexec(conn, &(command->data));
+  PGresult *res = PQexec(conn, (char*)(&(command->data)));
   if (PQresultStatus(res) != PGRES_COMMAND_OK)
     {
       PQclear(res);
@@ -65,7 +65,7 @@ uintptr_t
 smlpq_query(uintptr_t conn0, String query)
 {
   PGconn *conn = (PGconn *)untag_scalar(conn0);
-  PGresult *res = PQexec(conn, &(query->data));
+  PGresult *res = PQexec(conn, (char*)(&(query->data)));
   if (PQresultStatus(res) != PGRES_TUPLES_OK)
     {
       PQclear(res);
@@ -135,7 +135,7 @@ long
 smlpq_fnumber(uintptr_t res0, String f)
 {
   PGresult *res = (PGresult *)untag_scalar(res0);
-  return convertIntToML(PQfnumber(res,&(f->data)));
+  return convertIntToML(PQfnumber(res,(char*)(&(f->data))));
 }
 
 void
